@@ -1,11 +1,21 @@
+using FinBytesTaxesAPI.Data;
+using FinBytesTaxesAPI.Repositories;
+using FinBytesTaxesAPI.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var services = builder.Services;
 
-builder.Services.AddControllers();
+services.AddScoped<ICitiesRepository, CitiesRepository>();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddDbContext<AppDbContext>(
+    option => option.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")
+    ));
 
 var app = builder.Build();
 
