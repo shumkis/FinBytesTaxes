@@ -7,16 +7,16 @@ namespace FinBytesTaxesAPI.Repositories
 {
     public class CitiesRepository : ICitiesRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _db;
 
-        public CitiesRepository(AppDbContext appDbContext)
+        public CitiesRepository(AppDbContext db)
         {
-            _appDbContext = appDbContext;
+            _db = db;
         }
 
         public async Task<IEnumerable<City>> GetAllAsync()
         {
-            return await _appDbContext.Cities.ToListAsync();
+            return await _db.Cities.AsNoTracking().ToListAsync();
         }
     }
 }
