@@ -1,5 +1,6 @@
 using FinBytesTaxesAPI.Data;
 using FinBytesTaxesAPI.Extensions;
+using FinBytesTaxesAPI.Middleware;
 using FinBytesTaxesAPI.Swagger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -13,6 +14,7 @@ services.AddRepositories();
 services.AddAppServices();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
+services.AddCustomAutoMapper();
 
 services.AddSwaggerGen(options =>
 {
@@ -20,19 +22,21 @@ services.AddSwaggerGen(options =>
     options.OperationFilter<AddHeaderOperationFilter>();
 });
 
-services.AddCustomAutoMapper();
-
 services.AddDbContext<AppDbContext>(
     option => option.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")
     ));
 
 var app = builder.Build();
 
+app.ApplyMigrations();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 app.UseHttpsRedirection();

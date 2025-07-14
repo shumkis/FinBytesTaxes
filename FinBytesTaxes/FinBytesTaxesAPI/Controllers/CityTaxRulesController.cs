@@ -1,6 +1,5 @@
 using FinBytesTaxesAPI.Attributes;
 using FinBytesTaxesAPI.Constants;
-using FinBytesTaxesAPI.Models.Db;
 using FinBytesTaxesAPI.Models.Dto;
 using FinBytesTaxesAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +17,23 @@ namespace FinBytesTaxesAPI.Controllers
         {
             _cityTaxRulesService = cityTaxRulesService;
         }
+
+        [HttpGet("avg-rate/{cityId}")]
+        public async Task<ActionResult> GetAvgRateAsync(int cityId, [FromQuery] DateOnly dateFrom, DateOnly dateTo)
+        {
+            var avgRate = await _cityTaxRulesService.GetAvgRateAsync(cityId, dateFrom, dateTo);
+
+            return Ok(avgRate);
+        }
+
+        [HttpGet("schedule/{cityId}")]
+        public async Task<ActionResult> GetScheduleAsync(int cityId, [FromQuery] DateOnly dateFrom, DateOnly dateTo)
+        {
+          var schedule = await _cityTaxRulesService.GetTaxScheduleAsync(cityId, dateFrom, dateTo);
+
+            return Ok(schedule);
+        }
+
 
         [HttpGet("rate/{cityId}")]
         public async Task<ActionResult> GetRateByCityAndDateAsync(int cityId, [FromQuery] DateOnly date)

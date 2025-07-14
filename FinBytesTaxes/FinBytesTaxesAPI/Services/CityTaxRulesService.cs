@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using FinBytesTaxesAPI.Helpers;
 using FinBytesTaxesAPI.Models.Db;
 using FinBytesTaxesAPI.Models.Dto;
 using FinBytesTaxesAPI.Repositories.Interfaces;
 using FinBytesTaxesAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace FinBytesTaxesAPI.Services
 {
@@ -16,10 +19,40 @@ namespace FinBytesTaxesAPI.Services
             _cityTaxRulesRepository = cityTaxRulesRepository;
             _mapper = mapper;
         }
+        public async Task<decimal> GetAvgRateAsync(int cityId, [FromQuery] DateOnly dateFrom, DateOnly dateTo)
+        {
+            var schedule = await GetTaxScheduleAsync(cityId, dateFrom, dateTo);
+
+            var allRateSum = schedule.Sum(x => x.Rate ?? 0);
+            var average = Math.Round(allRateSum / schedule.Count, 2);
+            
+            return average;
+        }
+
+        public async Task<List<TaxScheduleItemDto>> GetTaxScheduleAsync(int cityId, [FromQuery] DateOnly dateFrom, DateOnly dateTo)
+        {
+            if (dateFrom > dateTo)
+            {
+                throw new ValidationException("DateFrom value cannot be bigger thant DateTo value");
+            }
+
+            var result = new List<TaxScheduleItemDto>();
+
+            var dates = DateHelper.RangeToDateList(dateFrom, dateTo);
+            var rules = await _cityTaxRulesRepository.GetAllByCityAndDateRangeAsync(cityId, dateFrom, dateTo);
+
+            foreach (var date in dates)
+            {
+                result.Add(GetTaxScheduleItemFromRules(date, rules));
+            }
+
+            return result;
+
+        }
 
         public async Task<decimal?> GetRateByCityAndDateAsync(int cityId, DateOnly date)
         {
-            var rule = await _cityTaxRulesRepository.GetByCityAndDateAsync(cityId, date);
+            var rule = await _cityTaxRulesRepository.GetRuleByCityAndDateAsync(cityId, date);
 
             if (rule != null)
             {
@@ -35,7 +68,7 @@ namespace FinBytesTaxesAPI.Services
 
             if (exists)
             {
-                throw new Exception($"Rule for cityId {cityTaxRuleDto.CityId} of type {cityTaxRuleDto.TaxTypeId} " +
+                throw new ValidationException($"Rule for cityId {cityTaxRuleDto.CityId} of type {cityTaxRuleDto.TaxTypeId} " +
                     $"already exists for this date range {cityTaxRuleDto.StartDate} - {cityTaxRuleDto.EndDate}");
             }
             else
@@ -53,6 +86,17 @@ namespace FinBytesTaxesAPI.Services
         public async Task DeleteAsync(int id)
         {
             await _cityTaxRulesRepository.DeleteAsync(id);
+        }
+
+        private TaxScheduleItemDto GetTaxScheduleItemFromRules(DateOnly date, IEnumerable<CityTaxRule> rules)
+        {
+            var rule = rules.FirstOrDefault(x => x.StartDate <= date && x.EndDate >= date);
+
+            return new TaxScheduleItemDto
+            {
+                Date = date,
+                Rate = rule?.Rate
+            };
         }
     }
 }

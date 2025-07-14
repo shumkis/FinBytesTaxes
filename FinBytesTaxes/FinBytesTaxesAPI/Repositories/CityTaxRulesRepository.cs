@@ -15,7 +15,16 @@ namespace FinBytesTaxesAPI.Repositories
             _db = db;
         }
 
-        public async Task<CityTaxRule?> GetByCityAndDateAsync(int cityId, DateOnly date)
+        public async Task<IEnumerable<CityTaxRule>> GetAllByCityAndDateRangeAsync(int cityId, DateOnly dateFrom, DateOnly dateTo)
+        {
+            return await _db.CityTaxRules.AsNoTracking()
+                .Include(x => x.TaxType)
+                .Where(x => x.CityId == cityId && x.StartDate <= dateTo && x.EndDate >= dateFrom)
+                .OrderBy(x => x.TaxType.Priority)
+                .ToListAsync();
+        }
+
+        public async Task<CityTaxRule?> GetRuleByCityAndDateAsync(int cityId, DateOnly date)
         {
             return await _db.CityTaxRules.AsNoTracking()
                 .OrderBy(x => x.TaxType.Priority)

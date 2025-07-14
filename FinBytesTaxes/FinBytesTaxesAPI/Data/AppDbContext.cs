@@ -31,10 +31,11 @@ namespace FinBytesTaxesAPI.Data
                 new CityTaxRule() { Id = 1, CityId = 2, TaxTypeId = 4, Rate = 3.3m, StartDate = new DateOnly (2025, 01, 01), EndDate = new DateOnly (2025, 12, 31)},
                 new CityTaxRule() { Id = 2, CityId = 2, TaxTypeId = 3, Rate = 5m, StartDate = new DateOnly (2025, 06, 01), EndDate = new DateOnly (2025, 06, 30)},
                 new CityTaxRule() { Id = 3, CityId = 2, TaxTypeId = 3, Rate = 4m, StartDate = new DateOnly (2025, 07, 01), EndDate = new DateOnly (2025, 07, 31)},
-                new CityTaxRule() { Id = 4, CityId = 2, TaxTypeId = 2, Rate = 2.5m, StartDate = new DateOnly (2025, 02, 09), EndDate = new DateOnly (2025, 02, 15)},
-                new CityTaxRule() { Id = 5, CityId = 2, TaxTypeId = 2, Rate = 2.5m, StartDate = new DateOnly (2025, 03, 02), EndDate = new DateOnly (2025, 03, 08)},
-                new CityTaxRule() { Id = 6, CityId = 2, TaxTypeId = 1, Rate = 1.5m, StartDate = new DateOnly (2025, 06, 01), EndDate = new DateOnly (2025, 06, 01)},
-                new CityTaxRule() { Id = 7, CityId = 2, TaxTypeId = 1, Rate = 1.2m, StartDate = new DateOnly(2025, 10, 23), EndDate = new DateOnly (2025, 10, 23)}
+                new CityTaxRule() { Id = 4, CityId = 2, TaxTypeId = 3, Rate = 6m, StartDate = new DateOnly(2025, 08, 01), EndDate = new DateOnly(2025, 08, 31) },
+                new CityTaxRule() { Id = 5, CityId = 2, TaxTypeId = 2, Rate = 2.5m, StartDate = new DateOnly (2025, 02, 09), EndDate = new DateOnly (2025, 02, 15)},
+                new CityTaxRule() { Id = 6, CityId = 2, TaxTypeId = 2, Rate = 2.5m, StartDate = new DateOnly (2025, 03, 02), EndDate = new DateOnly (2025, 03, 08)},
+                new CityTaxRule() { Id = 7, CityId = 2, TaxTypeId = 1, Rate = 1.5m, StartDate = new DateOnly (2025, 06, 01), EndDate = new DateOnly (2025, 06, 01)},
+                new CityTaxRule() { Id = 8, CityId = 2, TaxTypeId = 1, Rate = 1.2m, StartDate = new DateOnly(2025, 10, 23), EndDate = new DateOnly (2025, 10, 23)}
             );
         }
 

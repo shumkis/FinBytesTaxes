@@ -5,7 +5,9 @@ namespace FinBytesTaxesAPI.Repositories.Interfaces
 {
     public interface ICityTaxRulesRepository
     {
-        Task<CityTaxRule?> GetByCityAndDateAsync(int cityId, DateOnly date);
+        Task<IEnumerable<CityTaxRule>> GetAllByCityAndDateRangeAsync(int cityId, DateOnly dateFrom, DateOnly dateTo);
+
+        Task<CityTaxRule?> GetRuleByCityAndDateAsync(int cityId, DateOnly date);
 
         Task<bool> Exists(CreateCityTaxRuleDto cityTaxRuleDto);
 
