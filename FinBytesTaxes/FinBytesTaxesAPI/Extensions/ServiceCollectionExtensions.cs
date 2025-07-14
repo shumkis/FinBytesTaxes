@@ -14,6 +14,7 @@ namespace FinBytesTaxesAPI.Extensions
             return services.AddAutoMapper(cfg =>
             {
                 cfg.CreateMap<CreateCityTaxRuleDto, CityTaxRule>();
+                cfg.CreateMap<City, CityDto>();
             });
         }
 
@@ -28,6 +29,7 @@ namespace FinBytesTaxesAPI.Extensions
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddScoped<ICityTaxRulesService, CityTaxRulesService>();
+            services.AddScoped<ICitiesService, CitiesService>();
 
             return services;
         }

@@ -1,3 +1,5 @@
+using FinBytesTaxesAPI.Attributes;
+using FinBytesTaxesAPI.Constants;
 using FinBytesTaxesAPI.Models.Db;
 using FinBytesTaxesAPI.Models.Dto;
 using FinBytesTaxesAPI.Services.Interfaces;
@@ -7,6 +9,7 @@ namespace FinBytesTaxesAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [RequireRoleHeader]
     public class CityTaxRulesController : ControllerBase
     {
         private readonly ICityTaxRulesService _cityTaxRulesService;
@@ -16,7 +19,7 @@ namespace FinBytesTaxesAPI.Controllers
             _cityTaxRulesService = cityTaxRulesService;
         }
 
-        [HttpGet("{cityId}")]
+        [HttpGet("rate/{cityId}")]
         public async Task<ActionResult> GetRateByCityAndDateAsync(int cityId, [FromQuery] DateOnly date)
         {
            var rate = await _cityTaxRulesService.GetRateByCityAndDateAsync(cityId, date);
@@ -24,6 +27,7 @@ namespace FinBytesTaxesAPI.Controllers
            return Ok(rate);
         }
 
+        [RequireRoleHeader(Const.AdminRoleName)]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateCityTaxRuleDto cityTaxRule)
         {
@@ -32,6 +36,7 @@ namespace FinBytesTaxesAPI.Controllers
             return Ok();
         }
 
+        [RequireRoleHeader(Const.AdminRoleName)]
         [HttpPatch("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] UpdateCityTaxRuleDto cityTaxRule)
         {
@@ -40,6 +45,7 @@ namespace FinBytesTaxesAPI.Controllers
             return Ok();
         }
 
+        [RequireRoleHeader(Const.AdminRoleName)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {

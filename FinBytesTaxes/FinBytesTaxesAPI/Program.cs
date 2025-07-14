@@ -1,6 +1,8 @@
 using FinBytesTaxesAPI.Data;
 using FinBytesTaxesAPI.Extensions;
+using FinBytesTaxesAPI.Swagger;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,13 @@ services.AddRepositories();
 services.AddAppServices();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+
+services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "City taxes API", Version = "v1" });
+    options.OperationFilter<AddHeaderOperationFilter>();
+});
+
 services.AddCustomAutoMapper();
 
 services.AddDbContext<AppDbContext>(

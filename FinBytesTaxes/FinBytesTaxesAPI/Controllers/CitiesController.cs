@@ -1,27 +1,26 @@
-using FinBytesTaxesAPI.Models.Db;
+using FinBytesTaxesAPI.Attributes;
 using FinBytesTaxesAPI.Repositories.Interfaces;
+using FinBytesTaxesAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace FinBytesTaxesAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [RequireRoleHeader]
     public class CitiesController : ControllerBase
     {
-        private readonly ICitiesRepository _citiesRepository;
-        private readonly ILogger<CitiesController> _logger;
+        private readonly ICitiesService _citiesService;
 
-        public CitiesController(ICitiesRepository citiesRepository, ILogger<CitiesController> logger)
+        public CitiesController(ICitiesService citiesService)
         {
-            _citiesRepository = citiesRepository;
-            _logger = logger;
+            _citiesService = citiesService;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-           var cities = await _citiesRepository.GetAllAsync();
+           var cities = await _citiesService.GetAllAsync();
 
            return Ok(cities);
         }
